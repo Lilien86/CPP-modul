@@ -16,7 +16,7 @@ class BitcoinExchange
 	
 		BitcoinExchange();
 		BitcoinExchange(const BitcoinExchange &cpy);
-		BitcoinExchange operator=(const BitcoinExchange &rhs);
+		BitcoinExchange &operator=(const BitcoinExchange &rhs);
 
 	public:
 		BitcoinExchange(const std::string &file);

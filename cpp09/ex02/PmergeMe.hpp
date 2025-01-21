@@ -6,7 +6,8 @@
 #include <list>
 #include <sstream>
 #include <ctime>
-#include <iterator> // For std::advance
+#include <iterator>
+#include <algorithm>
 
 template <typename Container>
 bool find_duplicate(const Container &nums, int new_value)
@@ -20,18 +21,32 @@ bool find_duplicate(const Container &nums, int new_value)
 }
 
 template <typename Container>
+void binary_insert(Container &nums, int value)
+{
+	typename Container::iterator it = std::lower_bound(nums.begin(), nums.end(), value);
+
+	if (it != nums.end() && *it == value)
+		return;
+	nums.insert(it, value);
+}
+
+template <typename Container>
 void insertionSort(Container &nums)
 {
 	typename Container::iterator it, j;
-	for (it = nums.begin(); it != nums.end(); ++it) {
+	for (it = nums.begin(); it != nums.end(); ++it)
+	{
 		j = it;
-
-		while (j != nums.begin()) {
+		while (j != nums.begin())
+		{
 			typename Container::iterator prev = j;
 			--prev;
-			if (*j < *prev) {
+			if (*j < *prev)
+			{
 				std::swap(*j, *prev);
-			} else {
+			}
+			else
+			{
 				break;
 			}
 			--j;
@@ -42,39 +57,31 @@ void insertionSort(Container &nums)
 template <typename Container>
 void fordJohnsonMergeInsertSort(Container &nums)
 {
-	if (nums.size() <= 3) {
+	if (nums.size() <= 3)
+	{
 		insertionSort(nums);
 		return;
 	}
 
 	typename Container::iterator mid = nums.begin();
-	std::advance(mid, nums.size() / 2); // Advance to the middle of the container
+	std::advance(mid, nums.size() / 2);
 
-	// Split into left and right halves
 	Container left(nums.begin(), mid);
 	Container right(mid, nums.end());
 
-	// Recursive sorting on both halves
 	fordJohnsonMergeInsertSort(left);
 	fordJohnsonMergeInsertSort(right);
 
-	// Merge sorted halves
-	typename Container::iterator leftIt = left.begin();
-	typename Container::iterator rightIt = right.begin();
-	typename Container::iterator numsIt = nums.begin();
+	nums.clear();
 
-	while (leftIt != left.end() && rightIt != right.end()) {
-		if (*leftIt < *rightIt)
-			*numsIt++ = *leftIt++;
-		else
-			*numsIt++ = *rightIt++;
+	for (typename Container::iterator it = left.begin(); it != left.end(); ++it)
+	{
+		binary_insert(nums, *it);
 	}
 
-	while (leftIt != left.end()) {
-		*numsIt++ = *leftIt++;
-	}
-	while (rightIt != right.end()) {
-		*numsIt++ = *rightIt++;
+	for (typename Container::iterator it = right.begin(); it != right.end(); ++it)
+	{
+		binary_insert(nums, *it);
 	}
 }
 
@@ -95,7 +102,6 @@ Container build_container(const char **args)
 	}
 	return container;
 }
-
 
 std::ostream &operator<<(std::ostream &os, const std::vector<int> &container);
 

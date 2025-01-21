@@ -9,6 +9,14 @@ bool is_digit(const std::string& str) {
 	return true;
 }
 
+BitcoinExchange	&BitcoinExchange::operator=(const BitcoinExchange &rhs)
+{
+	if (this != &rhs) {
+		this->_dataBase = rhs._dataBase;
+	}
+	return (*this);
+}
+
 double string_to_double(const std::string& str) {
 	std::stringstream ss(str);
 	double result;
